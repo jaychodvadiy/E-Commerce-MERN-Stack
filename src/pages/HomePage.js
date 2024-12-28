@@ -7,7 +7,6 @@ const HomePage = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
-    // Replace with actual API call
     axios.get('/api/products')
       .then(response => {
         setProducts(response.data);

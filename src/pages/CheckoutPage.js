@@ -1,42 +1,41 @@
-import React, { useState } from 'react';
-import Cart from '../components/Cart';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const CheckoutPage = () => {
-  const [cartItems, setCartItems] = useState([
-    // Example cart items
-    { id: 1, name: 'Product 1', price: 100, quantity: 1 },
-    { id: 2, name: 'Product 2', price: 50, quantity: 2 }
-  ]);
+function CheckoutPage({ cart }) {
+  const navigate = useNavigate();
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
 
-  const handleRemove = (id) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
-  };
+  const handlePayment = (method) => {
 
-  const handleIncrease = (id) => {
-    setCartItems(cartItems.map(item => 
-      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-    ));
-  };
-
-  const handleDecrease = (id) => {
-    setCartItems(cartItems.map(item => 
-      item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-    ));
+    navigate("/payment-success");
   };
 
   return (
-    <div>
-      <h1>Checkout</h1>
-      <Cart 
-        cartItems={cartItems} 
-        onRemove={handleRemove} 
-        onIncrease={handleIncrease} 
-        onDecrease={handleDecrease} 
-      />
-      <div>Total: ${cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)}</div>
-      <button>Proceed to Payment</button>
+    <div className="bg-gray-100 min-h-screen p-6">
+      <h1 className="text-3xl font-bold mb-4 text-gray-800">Checkout</h1>
+      <p>Total: ${total}</p>
+      <div className="mt-6 space-y-4">
+        <button
+          onClick={() => handlePayment("google-pay")}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Pay with Google Pay
+        </button>
+        <button
+          onClick={() => handlePayment("paypal")}
+          className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700"
+        >
+          Pay with PayPal
+        </button>
+        <button
+          onClick={() => handlePayment("credit-card")}
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
+          Pay with Credit/Debit Card
+        </button>
+      </div>
     </div>
   );
-};
+}
 
 export default CheckoutPage;
